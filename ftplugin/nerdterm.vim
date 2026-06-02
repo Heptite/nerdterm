@@ -1,6 +1,5 @@
 vim9script
 
-# vim: fileencoding=utf-8 tabstop=2 shiftwidth=2 foldlevel=0 foldmethod=marker:
 # -----------------------------------------------------------------------------
 # Name:     ftplugin/nerdterm.vim
 # Author:   Christian J. Robinson <heptite@gmail.com>
