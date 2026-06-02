@@ -11,8 +11,35 @@ The NERDTerm is a terminal toggle plugin for the Vim editor.
 Install via your preferred package manager. Example using [vim-plug](https://github.com/junegunn/vim-plug):
 
 ```vim
-Plug 'wuelnerdotexe/nerdterm'
+Plug 'Heptite/nerdterm'
 ```
+
+Or use Vim's built-in package support:
+
+### Unix/MacOS
+
+In a terminal type these commands:
+
+```sh
+mkdir -p ~/.vim/pack/cjr/start
+cd ~/.vim/pack/cjr/start
+git clone https://github.com/Heptite/nerdterm.git
+```
+
+### Windows
+
+Press `Windows+R`, type in "`cmd`" and press `Enter`.  In that window run these
+commands:
+
+```batch
+mkdir %USERPROFILE%\vimfiles\pack\cjr\start
+cd %USERPROFILE%\vimfiles\pack\cjr\start
+git clone https://github.com/Heptite/nerdterm.git
+```
+
+After installing using git you can always update by going into the
+`pack/cjr/start/nerdterm` directory and typing: `git pull`
+
 
 ## Usage
 
