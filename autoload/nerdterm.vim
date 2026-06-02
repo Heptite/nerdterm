@@ -10,14 +10,40 @@ vim9script
 
 var terminfo: dict<any> = { buffer_id: -1, state: 'closed' }
 
+def GetSize(): number
+	var size: number
+	var tmp: any = get(g:, 'NERDTermSize', '25%')
+
+	if tmp =~ '^[0-9]\+%$'
+		size = float2nr(&lines * str2float('0.' .. tmp[0 : -1]))
+	else
+		size = str2nr(tmp)
+	endif
+
+	if size == 0
+		echohl Error
+		echomsg 'g:NERDTermSize is set to an invalid value. Defaulting to 25%'
+		echohl NONE
+		size = float2nr(&lines * 0.25)
+	endif
+
+	return size
+enddef
+
+def WindowOpenCommand(): string
+	var size: number = GetSize()
+	var where: string = get(g:, 'NERDTermLocation', 'bottom') == 'bottom' ? 'botright' : 'topleft'
+	return $'{where} :{size}new'
+enddef
+
 def CreateTerm(): number
-	execute $'botright :{float2nr(&lines * 0.25)} new'
+	execute WindowOpenCommand()
 	var tmp_bufnr = bufnr()
 
 	var buffer_id: number =
 		term_start(&shell, {
 			term_name: 'NERDTerm',
-			term_rows: float2nr(&lines * 0.25),
+			term_rows: GetSize(),
 			term_finish: 'close'
 		})
 
@@ -40,7 +66,7 @@ export def Toggle()
 		hide
 		terminfo.state = 'closed'
   elseif terminfo.buffer_id > 0 && bufexists(terminfo.buffer_id)
-		execute $'botright :{float2nr(&lines * 0.25)} new'
+		execute WindowOpenCommand()
 		var tmp_bufnr = bufnr()
 		execute $'buffer {terminfo.buffer_id}'
 		silent execute $':{tmp_bufnr}bwipeout'

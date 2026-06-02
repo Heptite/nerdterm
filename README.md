@@ -43,19 +43,21 @@ After installing using git you can always update by going into the
 
 ## Usage
 
-NERDTerm provides only and exclusively one command:
+NERDTerm provides one command:
 
 ```vim
 :NERDTermToggle
 ```
 
-Which you can map to your favorite map, for example:
+Which you can map to your favorite map, for example the default is:
 
 ```vim
 map <c-`> <Plug>(NERDTermToggle)
 imap <c-`> <C-O><Plug>(NERDTermToggle)
 tmap <c-`> <Plug>(NERDTermToggle)
 ```
+
+See `:help NERDTerm` for details on how to configure the plugin.
 
 ## License
 
