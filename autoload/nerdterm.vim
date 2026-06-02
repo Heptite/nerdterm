@@ -1,86 +1,52 @@
-" vim: fileencoding=utf-8 tabstop=2 shiftwidth=2 foldlevel=0 foldmethod=marker:
-" -----------------------------------------------------------------------------
-" Name:     autoload/nerdterm.vim
-" Author:   Wuelner Martínez <wuelner.martinez@outlook.com>
-" URL:      https://github.com/wuelnerdotexe/human.vim
-" License:  MIT (C) Wuelner Martínez.
-" About:    A term toggle plugin for vim.
-" -----------------------------------------------------------------------------
+vim9script
 
-function! s:RemoveEmptyBuffers() abort
-  let l:buffers = filter(range(1, bufnr('$')),
-        \ 'buflisted(v:val)'.
-        \   ' && empty(bufname(v:val))'.
-        \   ' && bufwinnr(v:val)<0'.
-        \   ' && !getbufvar(v:val, "&mod")')
+# -----------------------------------------------------------------------------
+# Name:     autoload/nerdterm.vim
+# Author:   Christian J. Robinson <heptite@gmail.com>
+# URL:      https://github.com/Heptite/nerdterm
+# License:  GPL3 (C) Christian J. Robinson
+# About:    A term toggle plugin for vim.
+# -----------------------------------------------------------------------------
 
-  if !empty(l:buffers)
-    silent! execute 'bwipeout ' . join(l:buffers, ' ')
+var terminfo: dict<any> = { buffer_id: -1, state: 'closed' }
+
+def CreateTerm(): number
+	execute $'botright :{float2nr(&lines * 0.25)} new'
+	var tmp_bufnr = bufnr()
+
+	var buffer_id: number =
+		term_start(&shell, {
+			term_name: 'NERDTerm',
+			term_rows: float2nr(&lines * 0.25),
+			term_finish: 'close'
+		})
+
+	silent execute $':{tmp_bufnr}bwipeout'
+
+	if buffer_id > 0
+		setbufvar(buffer_id, '&filetype', 'nerdterm')
+		setbufvar(buffer_id, '&buflisted', false)
+	endif
+
+	return buffer_id
+enddef
+
+export def Toggle()
+	if !bufexists(terminfo.buffer_id)
+		terminfo = { buffer_id: -1, state: 'closed' }
+	endif
+
+  if terminfo.state == 'opened'
+		hide
+		terminfo.state = 'closed'
+  elseif terminfo.buffer_id > 0 && bufexists(terminfo.buffer_id)
+		execute $'botright :{float2nr(&lines * 0.25)} new'
+		var tmp_bufnr = bufnr()
+		execute $'buffer {terminfo.buffer_id}'
+		silent execute $':{tmp_bufnr}bwipeout'
+		terminfo.state = 'opened'
+	else
+		terminfo.buffer_id = CreateTerm()
+		terminfo.state = 'opened'
   endif
-endfunction
-
-function! s:CreateTerm() abort
-  if has('nvim')
-    call termopen($SHELL)
-  else
-    terminal ++curwin
-  endif
-
-  let s:terminfo.buffer_id = bufnr('')
-
-  setlocal filetype=nerdterm nobuflisted
-endfunction
-
-function! s:OpenTerm() abort
-  execute 'botright' . float2nr(&lines * 0.25) . 'new'
-
-  let s:terminfo.win_id = win_getid()
-
-  try
-    execute 'buffer' s:terminfo.buffer_id
-  catch
-    call <SID>CreateTerm()
-  endtry
-
-  call <SID>RemoveEmptyBuffers()
-
-  let s:terminfo.state = 'opened'
-endfunction
-
-function! s:CloseTerm() abort
-  if win_gotoid(s:terminfo.win_id)
-    let s:terminfo.win_id = win_getid()
-
-    hide
-
-    call <SID>RemoveEmptyBuffers()
-  endif
-
-  let s:terminfo.state = 'closed'
-endfunction
-
-function! nerdterm#Toggle() abort
-  if !exists('s:terminfo') || bufnr(s:terminfo.buffer_id) == -1
-    let s:terminfo = { 'win_id': -1, 'buffer_id': -1, 'state': 'closed' }
-  elseif getbufinfo(s:terminfo.buffer_id)[0].windows == []
-    let s:terminfo.state = 'closed'
-  endif
-
-  if s:terminfo.state == 'opened'
-    call <SID>CloseTerm()
-  elseif s:terminfo.state == 'closed'
-    call <SID>OpenTerm()
-  endif
-endfunction
-
-function! nerdterm#SetOptions() abort
-  setlocal signcolumn=no
-  setlocal nospell
-  setlocal nonumber
-  setlocal norelativenumber
-  setlocal noruler
-  setlocal nocursorline
-  setlocal colorcolumn=
-  setlocal nolist
-endfunction
-
+enddef
