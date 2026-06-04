@@ -8,7 +8,7 @@ vim9script
 # About:    A term toggle plugin for vim.
 # -----------------------------------------------------------------------------
 
-var terminfo: dict<any> = { buffer_id: -1, state: 'closed' }
+var terminal_info: dict<any> = { buffer_id: -1, opened: false }
 
 def GetSize(): number
 	var size: number
@@ -30,24 +30,26 @@ def GetSize(): number
 	return size
 enddef
 
-def WindowOpenCommand(): string
+def GetWindowOpenCommand(bufnr: number = -1): string
 	var size: number = GetSize()
 	var where: string = get(g:, 'NERDTermLocation', 'bottom') == 'bottom' ? 'botright' : 'topleft'
-	return $'{where} :{size}new'
+	if bufnr > 0
+		return $'{where} :{bufnr}sbuf|resize {size}'
+	else
+		return $'{where} :{size}new'
+	endif
 enddef
 
 def CreateTerm(): number
-	execute WindowOpenCommand()
-	var tmp_bufnr = bufnr()
+	execute GetWindowOpenCommand()
 
 	var buffer_id: number =
 		term_start(&shell, {
 			term_name: 'NERDTerm',
 			term_rows: GetSize(),
-			term_finish: 'close'
+			term_finish: 'close',
+			curwin: true
 		})
-
-	silent execute $':{tmp_bufnr}bwipeout'
 
 	if buffer_id > 0
 		setbufvar(buffer_id, '&filetype', 'nerdterm')
@@ -58,21 +60,18 @@ def CreateTerm(): number
 enddef
 
 export def Toggle()
-	if !bufexists(terminfo.buffer_id)
-		terminfo = { buffer_id: -1, state: 'closed' }
+	if !bufexists(terminal_info.buffer_id)
+		terminal_info = { buffer_id: -1, opened: false }
 	endif
 
-  if terminfo.state == 'opened'
+	if terminal_info.opened
 		hide
-		terminfo.state = 'closed'
-  elseif terminfo.buffer_id > 0 && bufexists(terminfo.buffer_id)
-		execute WindowOpenCommand()
-		var tmp_bufnr = bufnr()
-		execute $'buffer {terminfo.buffer_id}'
-		silent execute $':{tmp_bufnr}bwipeout'
-		terminfo.state = 'opened'
+		terminal_info.opened = false
+	elseif terminal_info.buffer_id > 0 && bufexists(terminal_info.buffer_id)
+		execute GetWindowOpenCommand(terminal_info.buffer_id)
+		terminal_info.opened = true
 	else
-		terminfo.buffer_id = CreateTerm()
-		terminfo.state = 'opened'
-  endif
+		terminal_info.buffer_id = CreateTerm()
+		terminal_info.opened = true
+	endif
 enddef
