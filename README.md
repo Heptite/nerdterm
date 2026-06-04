@@ -61,4 +61,4 @@ See `:help NERDTerm` for details on how to configure the plugin.
 
 ## License
 
-[GPL3 &copy; Christian J. Robinson](https://github.com/Heptite/nerdterm/blob/main/LICENSE)
+[GPL3 &copy; 2026 Christian J. Robinson](https://github.com/Heptite/nerdterm/blob/master/LICENSE)
