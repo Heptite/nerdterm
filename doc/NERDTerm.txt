@@ -30,6 +30,11 @@ percentage of the total screen height. The default:
 >
 	:let g:NERDTermSize = '25%'
 <
+3. Copyright
+
+Copyright © 2026 Christian J. Robinson <heptite@gmail.com> Distributed under
+the terms of the GNU General Public License (GPL) version 3 or later.
+
 ------------------------------------------------------------------------------
 
 Note: At one time this plugin was a fork of Wuelner Martínez's NERDTerm at:

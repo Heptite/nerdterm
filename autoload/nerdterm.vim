@@ -4,7 +4,7 @@ vim9script
 # Name:     autoload/nerdterm.vim
 # Author:   Christian J. Robinson <heptite@gmail.com>
 # URL:      https://github.com/Heptite/nerdterm
-# License:  GPL3 (C) Christian J. Robinson
+# License:  GPL3 (C) 2026 Christian J. Robinson
 # About:    A term toggle plugin for vim.
 # -----------------------------------------------------------------------------
 
