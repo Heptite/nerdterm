@@ -1,4 +1,4 @@
-# The NERDTerm
+# The New and Improved NERDTerm
 
 The NERDTerm is a terminal toggle plugin for the Vim editor.
 

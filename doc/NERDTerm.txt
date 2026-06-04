@@ -1,4 +1,8 @@
-*NERDTerm.txt* A terminal toggle plugin.
+*NERDTerm.txt*	A terminal toggle plugin
+
+		by Christian J. Robinson
+
+		Last change: 2026 Jun 03
 
 ==============================================================================
 
@@ -22,10 +26,18 @@ display (default) or the top:
 	:let g:NERDTermLocation = 'top'
 <
 You can configure NERDTerm's window size to be an absolute line count or a
-percentage. The default:
+percentage of the total screen height. The default:
 >
 	:let g:NERDTermSize = '25%'
 <
+------------------------------------------------------------------------------
+
+Note: At one time this plugin was a fork of Wuelner Martínez's NERDTerm at:
+https://github.com/wuelnerdotexe/nerdterm
+
+However, I reached a point where I wanted it to behave differently enough, and
+work under Vim9's new scripting engine, that I rebuilt the code from the
+ground up.
 
 ==============================================================================
 

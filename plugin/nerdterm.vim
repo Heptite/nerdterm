@@ -11,10 +11,11 @@ vim9script
 command NERDTermToggle call nerdterm#Toggle()
 
 map <Plug>(NERDTermToggle) <Cmd>NERDTermToggle<CR>
+imap <Plug>(NERDTermToggle) <Cmd>NERDTermToggle<CR>
 tmap <Plug>(NERDTermToggle) <Cmd>NERDTermToggle<CR>
 
 if hasmapto('<Plug>(NERDTermToggle)') == 0
 	map <c-`> <Plug>(NERDTermToggle)
-	imap <c-`> <C-O><Plug>(NERDTermToggle)
+	imap <c-`> <Plug>(NERDTermToggle)
 	tmap <c-`> <Plug>(NERDTermToggle)
 endif
